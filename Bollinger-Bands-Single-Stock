@@ -7,7 +7,7 @@ def initialize(context):
     """
     Called once at the start of the algorithm.
     """
-    # Rebalance every day one hour into market open
+    # Rebalance daily, at market open
     schedule_function(check_bollinger,date_rules.every_day())
     
     # save stock Johnson and Johnson as jnj
@@ -18,6 +18,7 @@ def check_bollinger(context,data):
     """
     Check if outside Bollinger Bands
     """
+    
     jnj = context.jnj
     # Get current price
     current_price = data.current(jnj,'price')
@@ -32,7 +33,7 @@ def check_bollinger(context,data):
     # Get 20 day mean
     mavg_20 = hist.mean()
     
-    # Get 20 day sd
+    # Get 20 day standard deviation
     msd_20 = hist.std()
     
     # Create upper and lower bands

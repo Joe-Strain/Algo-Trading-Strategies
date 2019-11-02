@@ -1,0 +1,48 @@
+"""
+Algo to trade Johnson and Johnson using Bollinger Bands as trading signals. When the stock price rises above the upper Bollinger Band we short, when it drops below lower Bollinger Band we go long.
+Johnson and Johnson can be reaplced with any stock by replacing the Stock ID (sid) below
+"""
+
+def initialize(context):
+    """
+    Called once at the start of the algorithm.
+    """
+    # Rebalance every day one hour into market open
+    schedule_function(check_bollinger,date_rules.every_day())
+    
+    # save stock Johnson and Johnson as jnj
+    context.jnj = sid(4151)
+    
+
+def check_bollinger(context,data):
+    """
+    Check if outside Bollinger Bands
+    """
+    jnj = context.jnj
+    # Get current price
+    current_price = data.current(jnj,'price')
+    
+    hist = data.history(
+        jnj,
+        fields='price',
+        bar_count=20,
+        frequency='1d'
+        )
+    
+    # Get 20 day mean
+    mavg_20 = hist.mean()
+    
+    # Get 20 day sd
+    msd_20 = hist.std()
+    
+    # Create upper and lower bands
+    upper_band = mavg_20 + 2 * msd_20
+    lower_band = mavg_20 - 2 * msd_20
+    
+    # Short, long or stick?
+    if current_price <= lower_band:
+        order_target_percent(jnj,1.0)
+        print("I'm going long!")
+    elif current_price >= upper_band:
+        order_target_percent(jnj,-1.0)
+        print("Short it baby!")

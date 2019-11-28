@@ -1,0 +1,34 @@
+# Perform multiple linear regression on 4 stocks (relate an asset, Y, to the other 3, X[i])
+# Y = alpha + beta[1]*X[1] + beta[2]*X[2] + beta[3]*X[3]
+
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+from statsmodels import regression
+import matplotlib.pyplot as plt
+
+# Load data
+start = '2013-01-01'
+end = '2014-01-01'
+Y = get_pricing('MSFT', fields='price', start_date=start, end_date=end)
+X1 = get_pricing('AAPL', fields='price', start_date=start, end_date=end)
+X2 = get_pricing('SNY', fields='price', start_date=start, end_date=end)
+X3 = get_pricing('SNE', fields='price', start_date=start, end_date=end)
+
+# Create matrix of column vectors (adding a constant column for the alpha value)
+X = sm.add_constant(np.column_stack((X1,X2,X3)))
+
+# Perform the Multiple Linear Regression
+mlr = regression.linear_model.OLS(Y,X).fit()
+print "beta 1: ", mlr.params[1]
+print "beta 2: ", mlr.params[2]
+print "beta 3: ", mlr.params[3]
+
+# Generate prediction using the beta values obtained from the MLR
+prediction = mlr.params[0] + mlr.params[1]*X1 + mlr.params[2]*X2 + mlr.params[3]*X3
+
+# Plor comparison
+Y.plot(label='Real '+ Y.name.symbol)
+prediction.plot(label='Predicted ' + Y.name.symbol)
+plt.ylabel('Price')
+plt.legend();

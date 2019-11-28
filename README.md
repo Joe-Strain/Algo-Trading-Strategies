@@ -1,5 +1,3 @@
 # Algo-Trading-Strategies
 
-A collection of trading strategies, created using the Quantopian plotform.
-
-Back-testing was undertaken using US Equities data from the past 12 years.
+A collection of trading strategies and financial analysis tools, created using the Quantopian plotform.

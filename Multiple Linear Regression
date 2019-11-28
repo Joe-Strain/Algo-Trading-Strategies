@@ -27,7 +27,7 @@ print "beta 3: ", mlr.params[3]
 # Generate prediction using the beta values obtained from the MLR
 prediction = mlr.params[0] + mlr.params[1]*X1 + mlr.params[2]*X2 + mlr.params[3]*X3
 
-# Plor comparison
+# Plot comparison of actual data vs MLR predicted values
 Y.plot(label='Real '+ Y.name.symbol)
 prediction.plot(label='Predicted ' + Y.name.symbol)
 plt.ylabel('Price')
